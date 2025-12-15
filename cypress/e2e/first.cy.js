@@ -10,7 +10,7 @@ describe('Selectors demo', () => {
   it('By Class', () => {
     cy.get('.navbar').should('exist')
   })
-
+// Test
   it.only('using Get with Find end Eq', () => {
     cy.viewport(1800,700)
     cy.contains('button', 'Accept All').click()
