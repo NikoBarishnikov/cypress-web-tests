@@ -25,4 +25,11 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     // можно игнорировать вообще все uncaught exceptions
     return false
   })
+
+  Cypress.on('uncaught:exception', (err) => {
+    if (err.message.includes('postMessage')) {
+      return false
+    }
+  })
+  
   
