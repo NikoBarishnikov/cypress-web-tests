@@ -5,6 +5,7 @@ import { basePage } from "../support/pages/basePage"
 
 
 
+
 it('Replenishment of Ukraine mobile phone number', () => {
     basePage.open('https://next.privat24.ua/mobile?lang=en')
 
@@ -16,7 +17,6 @@ it('Replenishment of Ukraine mobile phone number', () => {
     cy.wait(3000)
     mobileReplenishment.checkDebitCard('4552 **** **** 8217')
     mobileReplenishment.checkAmount('1')
-    // commission (НЕ фиксированное число!)
     mobileReplenishment.checkComission()
     mobileReplenishment.checkCurrensy('UAH')
 
@@ -31,7 +31,7 @@ it('Replenishment of Ukraine mobile phone number', () => {
       });
   });
 
-  it.only("Example sending the POST request", () => {
+  it("Example sending the POST request", () => {
 
     const requestBody = {
       action: "info",
@@ -62,6 +62,8 @@ it('Replenishment of Ukraine mobile phone number', () => {
     });
   
   });
+
+  
   
   
   
