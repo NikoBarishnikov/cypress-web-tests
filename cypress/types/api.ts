@@ -1,6 +1,6 @@
 
 import { Person } from "./person";
-import { CreatePersonDto, UpdatePersonDto } from "./person.dto";
+
 
 export type GetPersonsResponse = Person[];
 

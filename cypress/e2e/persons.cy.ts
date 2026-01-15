@@ -10,8 +10,8 @@ describe("Persons page", () => {
   function generateTestPerson(): CreatePersonDto {
     const randomId = Date.now();
     return {
-      name: "JanBalan Test",
-      email: `janbalan.test+${randomId}@example.com`,
+      name: "Jan Test",
+      email: `jan.test+${randomId}@example.com`,
       birth_date: "1990-01-01",
     };
   }
@@ -69,33 +69,44 @@ describe("Persons page", () => {
     });
   });
 
-  // --- Edit a person in the table ---
-  it("edits person from table", () => {
+  // --- Edit a person in the table via modal ---
+  it("edits person from table via modal", () => {
     const testPerson = generateTestPerson();
-
+    const updatedName = "Jan Update";
+  
+    // Create person via API
     cy.request<Person>("POST", apiUrl, testPerson).then((res) => {
-      const updatedName = "JanBaly Updated";
-
       cy.visit("/");
 
-      // Stub prompt() for editing
-      cy.window().then((win) => {
-        cy.stub(win, "prompt")
-          .onFirstCall().returns(updatedName)
-          .onSecondCall().returns(res.body.email)
-          .onThirdCall().returns(res.body.birth_date);
-      });
-
-      cy.contains("td", res.body.email, { timeout: 5000 })
+      // Open modal
+      cy.contains("td", res.body.email)
         .parent("tr")
         .within(() => {
           cy.get(".edit").click();
         });
 
-      cy.contains("td", res.body.email)
-        .parent("tr")
-        .find(".name")
-        .should("have.text", updatedName);
+      // Wait until modal has class 'show' (Bootstrap 5 fade animation)
+      cy.get("[data-cy=edit-modal]", { timeout: 10000 }).should("have.class", "show");
+
+      // Fill modal form
+      cy.get("[data-cy=edit-name]").clear().type(updatedName);
+      cy.get("[data-cy=edit-email]").clear().type(res.body.email);
+      cy.get("[data-cy=edit-birth-date]").clear().type(res.body.birth_date);
+
+     // Click Save
+     cy.get("[data-cy=save-person]").click();
+
+// Wait for modal to close and table to update
+     cy.get("[data-cy=edit-modal]").should("not.have.class", "show");
+
+// Wait a bit to ensure JS updated the table
+     cy.wait(100);
+
+// Verify updated name in table
+     cy.contains("td", res.body.email)
+      .parent("tr")
+      .find(".name")
+      .should("have.text", updatedName);
     });
   });
 
